@@ -16,7 +16,6 @@ function useInView(threshold = 0.15) {
   return [ref, inView];
 }
 
-
 // ── Main About Section ───────────────────────────────────────────────────────
 function AboutSection() {
   const arrowRef = useRef(null);
@@ -280,9 +279,9 @@ function AboutSection() {
         <section className="about-bg relative py-24 px-5 md:px-12 lg:px-20">
 
           {/* Floating blobs */}
-          <div className="blob blob-blue" />
+          {/* <div className="blob blob-blue" />
           <div className="blob blob-pink" />
-          <div className="diag-strip" />
+          <div className="diag-strip" /> */}
 
           <div className="">
             {/* ── Two-column main content ── */}
@@ -381,6 +380,100 @@ const SERVICES = [
   'App Store', 'Analytics', 'Other',
 ];
 
+function HorizontalScrollSection() {
+  const containerRef = useRef(null);
+  const scrollRef = useRef(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const container = containerRef.current;
+      const scrollContent = scrollRef.current;
+
+      if (!container || !scrollContent) return;
+
+      const rect = container.getBoundingClientRect();
+      const start = container.offsetTop;
+      const end = start + container.offsetHeight - window.innerHeight;
+
+      const scrollY = window.scrollY;
+
+      if (scrollY >= start && scrollY <= end) {
+        const progress = (scrollY - start) / (end - start);
+        const maxTranslate =
+          scrollContent.scrollWidth - window.innerWidth;
+
+        scrollContent.style.transform = `translateX(-${
+          progress * maxTranslate
+        }px)`;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return (
+    <section ref={containerRef} className="relative h-[300vh] bg-white">
+      <div className="sticky top-0 flex h-screen items-center overflow-hidden">
+        <div
+          ref={scrollRef}
+          className="flex gap-20 px-16 will-change-transform"
+        >
+          {/* Slide 1 */}
+          <div className="flex w-[100vw] items-center gap-12">
+            <div className="w-1/2 h-[350px] bg-gray-200 rounded-3xl"></div>
+
+            <div className="w-1/2">
+              <h2 className="text-5xl font-bold mb-6">
+                Marketing & Content
+              </h2>
+
+              <p className="text-lg text-gray-600 mb-6">
+                Manage marketing workflows and create powerful
+                content strategies for your team.
+              </p>
+
+              <button className="px-6 py-3 bg-black text-white rounded-full">
+                Get Started
+              </button>
+            </div>
+          </div>
+
+          {/* Slide 2 */}
+          <div className="flex w-[100vw] items-center gap-12">
+            <div className="w-1/2 h-[350px] bg-gray-300 rounded-3xl"></div>
+
+            <div className="w-1/2">
+              <h2 className="text-4xl font-bold mb-6">
+                Campaign Automation
+              </h2>
+
+              <p className="text-lg text-gray-600">
+                Automate campaigns and track performance in real time.
+              </p>
+            </div>
+          </div>
+
+          {/* Slide 3 */}
+          <div className="flex w-[100vw] items-center gap-12">
+            <div className="w-1/2 h-[350px] bg-gray-400 rounded-3xl"></div>
+
+            <div className="w-1/2">
+              <h2 className="text-4xl font-bold mb-6">
+                Content Insights
+              </h2>
+
+              <p className="text-lg text-gray-600">
+                Analyze engagement and optimize your marketing strategy.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function Home() {
   const [selected, setSelected] = useState([]);
   const [particlesReady, setParticlesReady] = useState(false);
@@ -388,7 +481,7 @@ export default function Home() {
   const toggle = (s) =>
     setSelected((prev) =>
       prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s]
-    );
+  );
 
   useEffect(() => {
     // Dynamically load tsparticles
@@ -477,7 +570,7 @@ export default function Home() {
   }, []);
 
   return (
-    <>
+    <div>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap');
 
@@ -656,11 +749,11 @@ export default function Home() {
             style={{
               position: 'absolute',
               top: 0, left: 0,
-              width: '100%', height: '100%',
+              width: '100vw', height: '100vh',
               zIndex: 0,
             }}
           />
-          <div className="max-w-7xl mx-auto" style={{ position: 'relative', zIndex: 1 }}>
+          <div className="" style={{ position: 'relative', zIndex: 1 }}>
 
             {/* — Headline block — */}
             <div className="text-center mb-14 fade-up-1">
@@ -722,11 +815,14 @@ export default function Home() {
         </section>
 
         {/* gradient divider */}
-        <div className="grad-rule" />
+        {/* <div className="grad-rule" /> */}
+      </div>
         <div>
           <AboutSection />
         </div>
-      </div>
-    </>
+        <div>
+          <HorizontalScrollSection />
+        </div>
+    </div>
   );
 }
